@@ -88,6 +88,9 @@
       },
       "kid_lock": {
         "name": "兒童鎖"
+      },
+      "battery": {
+        "name": "電池電量"
       }
     },
     "select": {

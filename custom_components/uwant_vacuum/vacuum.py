@@ -156,9 +156,15 @@ class UwantVacuumEntity(CoordinatorEntity[UwantVacuumCoordinator], StateVacuumEn
     @property
     def battery_level(self) -> int | None:
         """電量百分比 (0-100)。"""
-        level = self.coordinator.get_dp(DP_BATTERY_NEW, DP_BATTERY_OLD, "battery_percentage", "battery", "8")
-        if isinstance(level, (int, float)):
-            return max(0, min(100, int(level)))
+        if not self.coordinator.data:
+            return None
+        for k in (DP_BATTERY_NEW, DP_BATTERY_OLD, "battery_percentage", "battery", "8"):
+            val = self.coordinator.data.get(k)
+            if val is not None:
+                try:
+                    return max(0, min(100, int(val)))
+                except (ValueError, TypeError):
+                    continue
         return None
 
     @property
@@ -296,6 +302,8 @@ class UwantVacuumEntity(CoordinatorEntity[UwantVacuumCoordinator], StateVacuumEn
         attrs: dict[str, Any] = {}
         if self.battery_level is not None:
             attrs["battery_level"] = self.battery_level
+            attrs["battery"] = self.battery_level
+            attrs["battery_percentage"] = self.battery_level
             attrs["battery_icon"] = self.battery_icon
 
         if (work_status := self.coordinator.get_dp(DP_WORK_STATUS, "5")) is not None:

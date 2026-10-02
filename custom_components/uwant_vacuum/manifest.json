@@ -1,7 +1,7 @@
 {
     "domain": "uwant_vacuum",
     "name": "UWANT Vacuum (Tuya)",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "documentation": "https://github.com/Icefish/ha-uwant-vacuum",
     "issue_tracker": "https://github.com/Icefish/ha-uwant-vacuum/issues",
     "codeowners": [

@@ -1,7 +1,7 @@
 """Sensor platform for UWANT Vacuum (Tuya).
 
-提供額外感測器:已清掃時間/面積、故障碼、清掃模式、音量、勿擾、水量、吸力、累計。
-電量已在 vacuum entity 內呈現,這裡補上其他指標。
+提供標準電池電量感測器以及額外感測器:
+已清掃時間/面積、故障碼、清掃模式、音量、勿擾、水量、吸力、累計。
 """
 from __future__ import annotations
 
@@ -22,6 +22,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
+    DP_BATTERY_NEW,
+    DP_BATTERY_OLD,
     DP_CLEAN_AREA,
     DP_CLEAN_MODE,
     DP_CLEAN_TIME,
@@ -43,8 +45,30 @@ class UwantSensorDescription(SensorEntityDescription):
     value_fn: Callable[[dict[str, Any]], Any]
 
 
+def _get_battery_level(data: dict[str, Any]) -> int | None:
+    """提取電量百分比 (0-100)。"""
+    for k in (DP_BATTERY_NEW, DP_BATTERY_OLD, "battery_percentage", "battery", "8"):
+        val = data.get(k)
+        if val is not None:
+            try:
+                return max(0, min(100, int(val)))
+            except (ValueError, TypeError):
+                continue
+    return None
+
+
 # 中央定義所有 sensor
 SENSORS: tuple[UwantSensorDescription, ...] = (
+    # === 電池電量感測器 (HA 官方核心標準: 供卡片、頂部徽章與電池實體顯示) ===
+    UwantSensorDescription(
+        key="battery",
+        translation_key="battery",
+        name="Battery",
+        device_class=SensorDeviceClass.BATTERY,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=_get_battery_level,
+    ),
     # === 統計(累計) ===
     UwantSensorDescription(
         key="clean_time",
@@ -54,7 +78,7 @@ SENSORS: tuple[UwantSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.MINUTES,
         state_class=SensorStateClass.TOTAL_INCREASING,
-        value_fn=lambda data: data.get(DP_CLEAN_TIME),
+        value_fn=lambda data: data.get(DP_CLEAN_TIME, data.get("6")),
     ),
     UwantSensorDescription(
         key="clean_area",
@@ -64,7 +88,7 @@ SENSORS: tuple[UwantSensorDescription, ...] = (
         native_unit_of_measurement=UnitOfArea.SQUARE_METERS,
         device_class=SensorDeviceClass.AREA,
         state_class=SensorStateClass.TOTAL_INCREASING,
-        value_fn=lambda data: data.get(DP_CLEAN_AREA),
+        value_fn=lambda data: data.get(DP_CLEAN_AREA, data.get("7")),
     ),
     # === 故障 ===
     UwantSensorDescription(
@@ -82,7 +106,7 @@ SENSORS: tuple[UwantSensorDescription, ...] = (
         icon="mdi:broom",
         device_class=SensorDeviceClass.ENUM,
         options=["smart", "spot", "edge", "mop", "clean_before_mop", "zone"],
-        value_fn=lambda data: data.get(DP_CLEAN_MODE),
+        value_fn=lambda data: data.get(DP_CLEAN_MODE, data.get("132")),
     ),
     UwantSensorDescription(
         key="suction",
@@ -91,7 +115,7 @@ SENSORS: tuple[UwantSensorDescription, ...] = (
         icon="mdi:fan",
         device_class=SensorDeviceClass.ENUM,
         options=["quiet", "normal", "strong", "max"],
-        value_fn=lambda data: data.get(DP_SUCTION),
+        value_fn=lambda data: data.get(DP_SUCTION, data.get("9")),
     ),
     UwantSensorDescription(
         key="water_level",
@@ -100,7 +124,7 @@ SENSORS: tuple[UwantSensorDescription, ...] = (
         icon="mdi:water",
         device_class=SensorDeviceClass.ENUM,
         options=["low", "medium", "high"],
-        value_fn=lambda data: data.get(DP_WATER_LEVEL),
+        value_fn=lambda data: data.get(DP_WATER_LEVEL, data.get("10")),
     ),
     # === 設定值(可監看,需用 select entity 控制) ===
     UwantSensorDescription(
@@ -110,7 +134,7 @@ SENSORS: tuple[UwantSensorDescription, ...] = (
         icon="mdi:volume-high",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda data: data.get(DP_VOLUME),
+        value_fn=lambda data: data.get(DP_VOLUME, data.get("26")),
     ),
     UwantSensorDescription(
         key="do_not_disturb",
@@ -120,7 +144,7 @@ SENSORS: tuple[UwantSensorDescription, ...] = (
         device_class=SensorDeviceClass.ENUM,
         options=["off", "on"],
         value_fn=lambda data: (
-            "on" if data.get(DP_DO_NOT_DISTURB) else "off"
+            "on" if data.get(DP_DO_NOT_DISTURB, data.get("154")) else "off"
         ),
     ),
     UwantSensorDescription(
@@ -131,7 +155,7 @@ SENSORS: tuple[UwantSensorDescription, ...] = (
         device_class=SensorDeviceClass.ENUM,
         options=["off", "on"],
         value_fn=lambda data: (
-            "on" if data.get(DP_KID_LOCK) else "off"
+            "on" if data.get(DP_KID_LOCK, data.get("47")) else "off"
         ),
     ),
 )
@@ -167,7 +191,7 @@ class UwantSensor(CoordinatorEntity[UwantVacuumCoordinator], SensorEntity):
             "identifiers": {(DOMAIN, coordinator.device_id)},
             "name": coordinator.device_name,
             "manufacturer": "UWANT",
-            "model": "Vacuum (Tuya-based)",
+            "model": "U300 Robot Vacuum",
         }
 
     @property

@@ -88,6 +88,9 @@
       },
       "kid_lock": {
         "name": "Kid lock"
+      },
+      "battery": {
+        "name": "Battery"
       }
     },
     "select": {
