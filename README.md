@@ -1,7 +1,7 @@
 # UWANT Vacuum (Tuya) for Home Assistant
 
 <p align="center">
-  <img src="custom_components/uwant_vacuum/brand/logo.png" alt="UWANT Logo" width="300">
+  <img src="https://raw.githubusercontent.com/Icefish/ha-uwant-vacuum/main/logo.png" alt="UWANT Logo" width="300">
 </p>
 
 <p align="center">
