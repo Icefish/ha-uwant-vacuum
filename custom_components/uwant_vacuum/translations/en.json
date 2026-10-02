@@ -1,0 +1,154 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "UWANT Vacuum",
+        "description": "Choose how to connect. \"Local network\" is recommended — no cloud and no account needed, it talks to the vacuum directly over your LAN using the local_key.",
+        "data": {
+          "auth_mode": "Connection method"
+        }
+      },
+      "local": {
+        "title": "Local network connection",
+        "description": "Enter the Device ID, local_key, and LAN IP.\n\n[How to get local_key and Device ID?]\nNo root required! Tuya SDK writes decrypted device info into Android external storage:\n📁 Log Path: /sdcard/Android/data/com.uwant.smart/files/shareData/log/thingLog/thing.log.*.txt\n💻 Pull to computer:\n1. adb pull /sdcard/Android/data/com.uwant.smart/files/shareData/log/thingLog/ /tmp/uwant_logs/\n2. Grep for \"localKey\" and \"devId\" to obtain your credentials.\nPort is fixed at {port}, default protocol version is 3.3.",
+        "data": {
+          "device_id": "Device ID (devId)",
+          "local_key": "local_key",
+          "local_ip": "LAN IP address",
+          "protocol_version": "Protocol version",
+          "name": "Friendly name (optional)"
+        }
+      },
+      "account": {
+        "title": "UWANT account sign-in",
+        "description": "Enter the credentials you use in the UWANT HOME app (phone number or email).",
+        "data": {
+          "region": "Region",
+          "username": "Username",
+          "password": "Password",
+          "country_code": "Country code"
+        }
+      },
+      "developer": {
+        "title": "Tuya developer credentials",
+        "description": "Enter the Access ID and Access Secret from your iot.tuya.com project.",
+        "data": {
+          "region": "Region",
+          "access_id": "Access ID",
+          "access_secret": "Access Secret"
+        }
+      },
+      "device": {
+        "title": "Select device",
+        "description": "Choose the vacuum to add.",
+        "data": {
+          "device_id": "Device",
+          "name": "Friendly name (optional)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong local_key or protocol version. Note: re-pairing the device changes the local_key — fetch it again.",
+      "cannot_connect": "Cannot reach the device. Check the IP, that it is powered on, and that Home Assistant is on the same LAN.",
+      "no_device_found": "No devices found. Make sure this account has a vacuum bound.",
+      "unknown": "Unexpected error. Check the Home Assistant log."
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  },
+  "entity": {
+    "vacuum": {
+      "name": "Vacuum"
+    },
+    "sensor": {
+      "clean_time": {
+        "name": "Clean time"
+      },
+      "clean_area": {
+        "name": "Clean area"
+      },
+      "fault": {
+        "name": "Fault code"
+      },
+      "clean_mode": {
+        "name": "Clean mode"
+      },
+      "suction": {
+        "name": "Suction"
+      },
+      "water_level": {
+        "name": "Water level"
+      },
+      "volume": {
+        "name": "Volume"
+      },
+      "do_not_disturb": {
+        "name": "Do not disturb"
+      },
+      "kid_lock": {
+        "name": "Kid lock"
+      }
+    },
+    "select": {
+      "suction": {
+        "name": "Suction",
+        "state": {
+          "quiet": "Quiet",
+          "normal": "Normal",
+          "strong": "Strong",
+          "max": "Max"
+        }
+      },
+      "water_level": {
+        "name": "Water level",
+        "state": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        }
+      },
+      "clean_mode": {
+        "name": "Clean mode",
+        "state": {
+          "smart": "Smart",
+          "spot": "Spot",
+          "edge": "Edge",
+          "mop": "Mop only",
+          "clean_before_mop": "Vacuum then mop",
+          "zone": "Zone"
+        }
+      },
+      "water_temp": {
+        "name": "Water temperature",
+        "state": {
+          "cold": "Cold",
+          "warm": "Warm",
+          "hot": "Hot"
+        }
+      }
+    },
+    "button": {
+      "find_device": {
+        "name": "Find device"
+      }
+    }
+  },
+  "services": {
+    "set_dp": {
+      "name": "Set DP",
+      "description": "Set an arbitrary Tuya data point.",
+      "fields": {
+        "code": {
+          "name": "DP code"
+        },
+        "value": {
+          "name": "Value"
+        },
+        "device_id": {
+          "name": "Device ID"
+        }
+      }
+    }
+  }
+}

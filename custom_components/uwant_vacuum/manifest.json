@@ -1,0 +1,17 @@
+{
+    "domain": "uwant_vacuum",
+    "name": "UWANT Vacuum (Tuya)",
+    "version": "2.1.0",
+    "documentation": "https://github.com/Icefish/ha-uwant-vacuum",
+    "issue_tracker": "https://github.com/Icefish/ha-uwant-vacuum/issues",
+    "codeowners": [
+        "@Icefish"
+    ],
+    "config_flow": true,
+    "iot_class": "local_polling",
+    "integration_type": "device",
+    "requirements": [
+        "tinytuya>=1.15.0"
+    ],
+    "dependencies": []
+}

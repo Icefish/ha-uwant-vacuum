@@ -1,0 +1,154 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "UWANT 掃地機",
+        "description": "選擇連線方式。「本地區網」是最推薦的方式 —— 不需要雲端、不需要帳號,直接用 local_key 走區域網路控制。",
+        "data": {
+          "auth_mode": "連線方式"
+        }
+      },
+      "local": {
+        "title": "本地區網連線",
+        "description": "填入裝置的 Device ID、local_key 與區網 IP。\n\n【如何取得 local_key 與 Device ID？】\n免 Root！Tuya SDK 會將解密後的通訊記錄寫在 Android 手機中：\n📁 Log 檔案路徑：/sdcard/Android/data/com.uwant.smart/files/shareData/log/thingLog/thing.log.*.txt\n💻 使用電腦終端機提取：\n1. adb pull /sdcard/Android/data/com.uwant.smart/files/shareData/log/thingLog/ /tmp/uwant_logs/\n2. grep 搜尋「localKey」與「devId」即可獲得金鑰與設備 ID。\n連線連接埠固定為 {port}，協議版本預設為 3.3。",
+        "data": {
+          "device_id": "裝置 ID (devId)",
+          "local_key": "local_key",
+          "local_ip": "區網 IP",
+          "protocol_version": "協議版本",
+          "name": "顯示名稱(選填)"
+        }
+      },
+      "account": {
+        "title": "UWANT 帳號登入",
+        "description": "輸入你在 UWANT HOME App 使用的帳號密碼(手機號碼或 email)。",
+        "data": {
+          "region": "地區",
+          "username": "帳號",
+          "password": "密碼",
+          "country_code": "國碼"
+        }
+      },
+      "developer": {
+        "title": "Tuya 開發者憑證",
+        "description": "輸入 iot.tuya.com 專案的 Access ID 與 Access Secret。",
+        "data": {
+          "region": "地區",
+          "access_id": "Access ID",
+          "access_secret": "Access Secret"
+        }
+      },
+      "device": {
+        "title": "選擇設備",
+        "description": "選擇要加入的掃地機。",
+        "data": {
+          "device_id": "設備",
+          "name": "顯示名稱(選填)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "local_key 或協議版本不正確。若剛重新配對過裝置,local_key 會改變,請重新取得。",
+      "cannot_connect": "無法連線到裝置。請確認 IP 正確、裝置已開機且與 Home Assistant 在同一個區網。",
+      "no_device_found": "找不到任何設備,請確認此帳號已綁定掃地機。",
+      "unknown": "發生未知錯誤,請查看 Home Assistant 日誌。"
+    },
+    "abort": {
+      "already_configured": "此設備已經設定過了。"
+    }
+  },
+  "entity": {
+    "vacuum": {
+      "name": "掃地機"
+    },
+    "sensor": {
+      "clean_time": {
+        "name": "已清掃時間"
+      },
+      "clean_area": {
+        "name": "已清掃面積"
+      },
+      "fault": {
+        "name": "故障碼"
+      },
+      "clean_mode": {
+        "name": "清掃模式"
+      },
+      "suction": {
+        "name": "吸力"
+      },
+      "water_level": {
+        "name": "水量"
+      },
+      "volume": {
+        "name": "音量"
+      },
+      "do_not_disturb": {
+        "name": "勿擾模式"
+      },
+      "kid_lock": {
+        "name": "兒童鎖"
+      }
+    },
+    "select": {
+      "suction": {
+        "name": "吸力",
+        "state": {
+          "quiet": "靜音",
+          "normal": "標準",
+          "strong": "強力",
+          "max": "最大"
+        }
+      },
+      "water_level": {
+        "name": "水量",
+        "state": {
+          "low": "低",
+          "medium": "中",
+          "high": "高"
+        }
+      },
+      "clean_mode": {
+        "name": "清掃模式",
+        "state": {
+          "smart": "自動",
+          "spot": "定點",
+          "edge": "沿邊",
+          "mop": "純拖地",
+          "clean_before_mop": "掃拖",
+          "zone": "區域"
+        }
+      },
+      "water_temp": {
+        "name": "水溫",
+        "state": {
+          "cold": "冷水",
+          "warm": "溫水",
+          "hot": "熱水"
+        }
+      }
+    },
+    "button": {
+      "find_device": {
+        "name": "找吸塵器"
+      }
+    }
+  },
+  "services": {
+    "set_dp": {
+      "name": "設定 DP",
+      "description": "設定任意 Tuya 資料點。",
+      "fields": {
+        "code": {
+          "name": "DP 代碼"
+        },
+        "value": {
+          "name": "值"
+        },
+        "device_id": {
+          "name": "設備 ID"
+        }
+      }
+    }
+  }
+}

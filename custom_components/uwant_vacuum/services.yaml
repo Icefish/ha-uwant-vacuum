@@ -1,0 +1,24 @@
+set_dp:
+  name: Set DP
+  description: 設定任意 Tuya DP(資料點)值。常用:suction, water_level, clean_mode 等。
+  fields:
+    code:
+      name: DP code
+      description: Tuya 資料點識別碼,例如 suction / clean_mode / water_level。
+      required: true
+      example: suction
+      selector:
+        text:
+    value:
+      name: Value
+      description: 要設置的值(字串、布林、數字皆可,視 DP schema 而定)。
+      required: true
+      example: strong
+      selector:
+        text:
+    device_id:
+      name: Device ID
+      description: 留空使用預設設備,或指定 entry 內的 device_id。
+      required: false
+      selector:
+        text:
