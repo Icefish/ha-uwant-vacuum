@@ -135,6 +135,32 @@
       "find_device": {
         "name": "找吸塵器"
       }
+    },
+    "switch": {
+      "do_not_disturb": {
+        "name": "勿擾模式"
+      },
+      "kid_lock": {
+        "name": "兒童鎖"
+      },
+      "edge_brush": {
+        "name": "邊刷"
+      },
+      "carpet_clean": {
+        "name": "地毯清潔"
+      },
+      "carpet_boost": {
+        "name": "地毯增壓"
+      },
+      "no_stair_mode": {
+        "name": "無樓梯模式"
+      },
+      "auto_dust_collect": {
+        "name": "自動集塵"
+      },
+      "key_led_always_on": {
+        "name": "按鍵燈長亮"
+      }
     }
   },
   "services": {

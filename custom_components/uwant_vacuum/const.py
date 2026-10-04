@@ -130,7 +130,77 @@ DEFAULT_PROTOCOL_VERSION: Final = "3.3"
 # 本地連線逾時(秒)
 LOCAL_SOCKET_TIMEOUT: Final = 10
 
+# -------------------------------------------------------------------# ---------------------------------------------------------------------
+# 擴充 DP code 名稱(第二十版,2026-10-04)
+#
+# ⚠️ 注意:這些命名是「推測」,需用 UWANT app 點設定後看 log 驗證。
+# DP 數字 → 設定項對應 是根據 iOS app 介面推測的:
+#   基站設定:清洗 / 烘乾 / 集塵 / 清潔液 / 回洗頻率
+#   行為設定:童鎖 / 勿擾 / 無樓梯 / 按鍵燈 / 地毯
 # ---------------------------------------------------------------------
+
+# 拖布模組 / 水箱 / 耗材
+DP_MOP_MODULE: Final = "mop_module"              # DP 11 bool — 拖布模組是否就位
+DP_EDGE_BRUSH: Final = "edge_brush"             # DP 25 bool — 邊刷啟用
+DP_AUTO_DOCK: Final = "auto_dock"               # DP 27 bool — 自動回充
+DP_CISTERN: Final = "cistern"                   # DP 11 別名(同 mop_module)
+
+# 耗材狀態感測器
+DP_WATER_SHORTAGE: Final = "water_shortage"     # DP 37 1=缺水
+DP_DIRTY_WATER_FULL: Final = "dirty_water_full" # DP 38 bool
+DP_DUST_BAG_FULL: Final = "dust_bag_full"       # DP 39 bool
+DP_FAST_CHARGE: Final = "fast_charge"           # DP 155 bool — 快充模式
+
+# 基站動作(可寫的開關)
+DP_AUTO_DUST_COLLECT: Final = "auto_dust_collect"   # DP 148 bool — 自動集塵開關
+DP_HANDHELD_DUST_COLLECT: Final = "handheld_dust_collect" # DP 160 bool — 手動集塵觸發
+
+# 基站動作(可寫的開關)
+DP_DETOUR_WATER_CTRL: Final = "detergent_switch" # DP 19 — 投放清潔液
+DP_WASH_WATER_TEMP_CTRL: Final = "wash_water_temp_ctrl" # DP 158 — 清洗水溫控制
+
+# 地毯相關
+DP_CARPET_CLEAN: Final = "carpet_clean"           # DP 139 bool — 地毯清潔啟用
+DP_CARPET_MODE: Final = "carpet_mode"             # DP 140 str — boost/lift/avoid
+DP_CARPET_STRATEGY: Final = "carpet_strategy"     # DP 44 str — adaptive/avoid/lift
+DP_CARPET_BOOST: Final = "carpet_boost"           # DP 45 bool — 地毯增壓
+DP_AUTO_BOOST_CARPET: Final = "auto_boost_carpet" # DP 157 bool — 自動地毯增壓
+
+# 行為開關
+DP_KEY_LED_ALWAYS_ON: Final = "key_led_always_on"   # DP 155 bool — 按鍵燈常亮
+DP_STAIR_AVOID: Final = "stair_avoid_mode"         # DP 156 bool — 無樓梯模式
+DP_NO_STAIR_MODE: Final = "no_stair_mode"           # DP 159 bool — 無樓梯模式(別名)
+DP_HANDHELD_CLEAN: Final = "handheld_clean"         # DP 150 bool — 手動局部清掃
+
+# 模式值選項
+CARPET_STRATEGY_OPTIONS: Final[tuple[str, ...]] = ("adaptive", "avoid", "lift")
+CARPET_STRATEGY_DEFAULT: Final = "adaptive"
+
+CARPET_MODE_OPTIONS: Final[tuple[str, ...]] = ("boost", "lift", "avoid")
+CARPET_MODE_DEFAULT: Final = "boost"
+
+# 計數(烘乾/回洗時間,推測可寫)
+DP_DRY_DURATION_MIN: Final = "dry_duration_min"     # DP 141 str(int)
+DP_WASH_INTERVAL_MIN: Final = "wash_interval_min"   # DP 17 int
+DP_DUST_COLLECT_FREQ: Final = "dust_collect_freq"   # DP 21 int
+DP_WASH_COUNTDOWN: Final = "wash_countdown"         # DP 28 int
+DP_WASH_EXTRA: Final = "wash_extra"                 # DP 142 int
+DP_CLEAN_FINE: Final = "clean_fine"                 # DP 53 str
+DP_VOLUME: Final = "volume"                       # DP 26 — 語音提示音量 0-100
+DP_DO_NOT_DISTURB: Final = "do_not_disturb"     # DP 154 — 勿擾模式 bool
+DP_WATER_TEMP: Final = "water_temp"              # DP 135 — water_temp cold/warm/hot
+DP_FIND_DEVICE: Final = "find_device"            # DP 149 — 找吸塵器觸發指令
+DP_KID_LOCK: Final = "kid_lock"                  # DP 47 — 兒童鎖
+
+# 故障碼(可能有兩個 DP)
+DP_FAULT_STUCK: Final = "fault_stuck"               # DP 102
+DP_FAULT_LIFT: Final = "fault_lift"                 # DP 103
+
+# 默認值
+DEFAULT_DRY_MINUTES: Final = 120
+DEFAULT_WASH_INTERVAL_MIN: Final = 15
+DEFAULT_DUST_FREQ_MINUTES: Final = 30
+
 # U300 的 DP ID → DP code 對照表
 #
 # 本地模式拿到的 DP 是「數字 ID」,但 entity 用的是「code 名稱」。
@@ -139,39 +209,112 @@ LOCAL_SOCKET_TIMEOUT: Final = 10
 #
 # 對照來源:2026-10-01 實測 + product-configs-prod.json
 # ---------------------------------------------------------------------
+
+# 拖布模組 / 水箱 / 耗材
+DP_MOP_MODULE: Final = "mop_module"              # DP 11 bool — 拖布模組是否就位
+DP_EDGE_BRUSH: Final = "edge_brush"             # DP 25 bool — 邊刷啟用
+DP_AUTO_DOCK: Final = "auto_dock"               # DP 27 bool — 自動回充
+DP_CISTERN: Final = "cistern"                   # DP 11 別名(同 mop_module)
+
+# 耗材狀態感測器
+DP_WATER_SHORTAGE: Final = "water_shortage"     # DP 37 1=缺水
+DP_DIRTY_WATER_FULL: Final = "dirty_water_full" # DP 38 bool
+DP_DUST_BAG_FULL: Final = "dust_bag_full"       # DP 39 bool
+DP_FAST_CHARGE: Final = "fast_charge"           # DP 155 bool — 快充模式
+
+# 基站動作(可寫的開關)
+DP_AUTO_DUST_COLLECT: Final = "auto_dust_collect"   # DP 148 bool — 自動集塵開關
+DP_HANDHELD_DUST_COLLECT: Final = "handheld_dust_collect" # DP 160 bool — 手動集塵觸發
+
+# 基站動作(可寫的開關)
+DP_DETOUR_WATER_CTRL: Final = "detergent_switch" # DP 19 — 投放清潔液
+DP_WASH_WATER_TEMP_CTRL: Final = "wash_water_temp_ctrl" # DP 158 — 清洗水溫控制
+
+# 地毯相關
+DP_CARPET_CLEAN: Final = "carpet_clean"           # DP 139 bool — 地毯清潔啟用
+DP_CARPET_MODE: Final = "carpet_mode"             # DP 140 str — boost/lift/avoid
+DP_CARPET_STRATEGY: Final = "carpet_strategy"     # DP 44 str — adaptive/avoid/lift
+DP_CARPET_BOOST: Final = "carpet_boost"           # DP 45 bool — 地毯增壓
+DP_AUTO_BOOST_CARPET: Final = "auto_boost_carpet" # DP 157 bool — 自動地毯增壓
+
+# 行為開關
+DP_KEY_LED_ALWAYS_ON: Final = "key_led_always_on"   # DP 155 bool — 按鍵燈常亮
+DP_STAIR_AVOID: Final = "stair_avoid_mode"         # DP 156 bool — 無樓梯模式
+DP_NO_STAIR_MODE: Final = "no_stair_mode"           # DP 159 bool — 無樓梯模式(別名)
+DP_HANDHELD_CLEAN: Final = "handheld_clean"         # DP 150 bool — 手動局部清掃
+
+# 模式值選項
+CARPET_STRATEGY_OPTIONS: Final[tuple[str, ...]] = ("adaptive", "avoid", "lift")
+CARPET_STRATEGY_DEFAULT: Final = "adaptive"
+
+CARPET_MODE_OPTIONS: Final[tuple[str, ...]] = ("boost", "lift", "avoid")
+CARPET_MODE_DEFAULT: Final = "boost"
+
+# 計數(烘乾/回洗時間,推測可寫)
+DP_DRY_DURATION_MIN: Final = "dry_duration_min"     # DP 141 str(int)
+DP_WASH_INTERVAL_MIN: Final = "wash_interval_min"   # DP 17 int
+DP_DUST_COLLECT_FREQ: Final = "dust_collect_freq"   # DP 21 int
+DP_WASH_COUNTDOWN: Final = "wash_countdown"         # DP 28 int
+DP_WASH_EXTRA: Final = "wash_extra"                 # DP 142 int
+DP_CLEAN_FINE: Final = "clean_fine"                 # DP 53 str
+
 U300_DP_ID_TO_CODE: Final[dict[str, str]] = {
-    "1": DP_CLEAN_SWITCH_NEW,       # switch_go        — 清掃開關
-    "2": "pause_switch",            #                   — 暫停
-    "3": DP_CHARGE_SWITCH_NEW,      # switch_charge    — 回充開關
-    "4": "work_mode",               #                   — 模式(chargego / smart)
-    "5": "work_status",             #                   — 工作狀態(關鍵!)
+    # === 已驗證(2026-10-01 / 2026-10-02 實測)===
+    "1": DP_CLEAN_SWITCH_NEW,        # switch_go        — 清掃開關
+    "3": DP_CHARGE_SWITCH_NEW,       # switch_charge    — 回充開關
+    "4": "work_mode",                #                   — 模式(chargego / smart)
+    "5": "work_status",              #                   — 工作狀態(關鍵!)
     "6": "clean_time_min",
     "7": "clean_area_m2",
-    "8": DP_BATTERY_NEW,            # battery_percentage — 電量
-    "9": DP_SUCTION,                # suction          — 吸力
-    "10": DP_WATER_LEVEL,           # water_level      — 水量
-    "17": "unknown_17",
-    "19": "unknown_19",
-    "21": "unknown_21",
-    "26": "volume",
-    "29": "total_area",
-    "30": "total_time",
-    "31": "total_count",
-    "37": "unknown_37",
-    "44": "unknown_44",
-    "45": "unknown_45",
-    "51": "unknown_51",
-    "53": "clean_fine",
-    "130": DP_CLEAN_STATUS,         # clean_status     — 清掃狀態
-    "132": DP_CLEAN_MODE,           # clean_mode       — 清掃模式
-    "135": "water_temp",
-    "138": "clean_mode_quick",
-    "139": "unknown_139",
-    "140": "unknown_140",
-    "141": "unknown_141",
-    "149": "unknown_149",
-    "150": "unknown_150",
-    "160": "unknown_160",
+    "8": DP_BATTERY_NEW,             # battery_percentage — 電量
+    "9": DP_SUCTION,                 # suction          — 吸力
+    "10": DP_WATER_LEVEL,            # water_level      — 水量
+    "26": "volume",                  #                   — 音量 0-100
+    "29": "total_area",              #                   — 累計面積
+    "30": "total_time",              #                   — 累計時間(分)
+    "31": "total_count",             #                   — 累計次數
+    "53": "clean_fine",              #                   — 精細度 fine/standard
+    "130": DP_CLEAN_STATUS,          # clean_status     — 清掃狀態
+    "132": DP_CLEAN_MODE,            # clean_mode       — 清掃模式
+    "135": "water_temp",             #                   — 水溫
+    "138": "clean_mode_quick",       #                   — 快捷模式
+
+    # === v2.2.0 新增推測(2026-10-04)===
+    # ⚠️ 這些命名是根據 DP 值型別 + UWANT app 設定項推測,
+    #    需要逐個在 UWANT app 切換後看 log 驗證。
+    #    全部已收錄是為了讓 vacuum.py / sensor.py / switch.py
+    #    能直接用 code 名稱引用,不需要再寫 "154"。
+    "2": "pause_switch",             # 暫停開關
+    "11": DP_MOP_MODULE,             # 拖布模組(已裝 True)
+    "17": DP_WASH_INTERVAL_MIN,      # 拖布回洗頻率(分)
+    "19": DP_DETOUR_WATER_CTRL,      # 是否投放清潔液
+    "21": DP_DUST_COLLECT_FREQ,      # 集塵頻率
+    "25": DP_EDGE_BRUSH,             # 邊刷啟用
+    "27": DP_AUTO_DOCK,              # 自動回充
+    "28": DP_WASH_COUNTDOWN,         # 下次回洗倒數
+    "37": DP_WATER_SHORTAGE,         # 水箱缺水
+    "38": DP_DIRTY_WATER_FULL,       # 污水箱滿
+    "39": DP_DUST_BAG_FULL,          # 集塵袋滿
+    "44": DP_CARPET_STRATEGY,        # 地毯策略 adaptive/avoid/lift
+    "45": DP_CARPET_BOOST,           # 地毯增壓
+    "47": DP_KID_LOCK,               # 兒童鎖
+    "51": "base_volume",             # 基站音量(?)
+    "102": DP_FAULT_STUCK,           # 故障:卡住
+    "103": DP_FAULT_LIFT,            # 故障:抬起
+    "139": DP_CARPET_CLEAN,          # 地毯清潔啟用
+    "140": DP_CARPET_MODE,           # 地毯模式 boost/lift/avoid
+    "141": DP_DRY_DURATION_MIN,      # 烘乾時長(分)
+    "142": DP_WASH_EXTRA,            # 額外清洗
+    "148": DP_AUTO_DUST_COLLECT,     # 自動集塵
+    "149": "unknown_149",            # 尚未命名(keep)
+    "150": DP_HANDHELD_CLEAN,        # 手動局部清掃
+    "154": DP_DO_NOT_DISTURB,        # 勿擾模式
+    "155": DP_KEY_LED_ALWAYS_ON,     # 按鍵燈常亮
+    "156": DP_STAIR_AVOID,           # 無樓梯模式
+    "157": DP_AUTO_BOOST_CARPET,     # 自動地毯增壓
+    "158": DP_WASH_WATER_TEMP_CTRL,  # 清洗水溫控制
+    "159": DP_NO_STAIR_MODE,         # 無樓梯模式(別名)
+    "160": DP_HANDHELD_DUST_COLLECT, # 手動集塵
 }
 
 # 反向對照(code → DP ID),給下指令用
@@ -209,26 +352,6 @@ U300_WORK_STATUS_TO_HA: Final[dict[str, str]] = {
 
 
 # ---------------------------------------------------------------------
-# 擴充 DP(本地控制已驗證可用)
-# 來源:2026-10-02 從 UWANT app log + 實測確認
-# ---------------------------------------------------------------------
-DP_VOLUME: Final = "volume"                       # DP 26 — 語音提示音量 0-100
-DP_DO_NOT_DISTURB: Final = "do_not_disturb"     # DP 154 — 勿擾模式 bool
-DP_WATER_TEMP: Final = "water_temp"              # DP 135 — water_temp cold/warm/hot
-DP_FAULT_V2: Final = "fault_v2"                  # DP 102/103 — 故障碼變體
-DP_FIND_DEVICE: Final = "find_device"            # DP 149 — 找吸塵器觸發指令
-DP_EDGE_BRUSH: Final = "edge_brush"              # DP 2 — 邊刷
-DP_CISTERN: Final = "cistern"                    # DP 11 — 水箱
-DP_MOP: Final = "mop"                            # DP 25 — 拖地
-DP_AUTO_DOCK: Final = "auto_dock"                # DP 27 — 自動回充
-DP_DIRTY_NOTIFY: Final = "dirty_notify"          # DP 38 — 污水提醒
-DP_KID_LOCK: Final = "kid_lock"                  # DP 47 — 兒童鎖
-DP_FAST_CHARGE: Final = "fast_charge"            # DP 155 — 快充
-
-# DP 2, 11, 25, 27, 38, 47 在 U300_DP_ID_TO_CODE 表中對應的數字 ID
-# (在 local_client.py 已對應,但這裡加正式常數供 sensor 使用)
-
-# ---------------------------------------------------------------------
 # 吸力 / 水量 / 模式的可選值清單
 # ---------------------------------------------------------------------
 SUCTION_OPTIONS: Final[tuple[str, ...]] = ("quiet", "normal", "strong", "max")
@@ -255,3 +378,21 @@ WATER_TEMP_DEFAULT: Final = "warm"
 # 標準值:silent/quiet、auto、normal、high、max、min、medium
 # 我們用 Tuya 原生字串,讓 HA 自動對應 silent/quiet 等
 # ---------------------------------------------------------------------
+
+
+# 計數(烘乾/回洗時間,推測可寫)
+DP_DRY_DURATION_MIN: Final = "dry_duration_min"     # DP 141 str(int)
+DP_WASH_INTERVAL_MIN: Final = "wash_interval_min"   # DP 17 int
+DP_DUST_COLLECT_FREQ: Final = "dust_collect_freq"   # DP 21 int
+DP_WASH_COUNTDOWN: Final = "wash_countdown"         # DP 28 int
+DP_WASH_EXTRA: Final = "wash_extra"                 # DP 142 int
+DP_CLEAN_FINE: Final = "clean_fine"                 # DP 53 str
+
+# 故障碼(可能有兩個 DP)
+DP_FAULT_STUCK: Final = "fault_stuck"               # DP 102
+DP_FAULT_LIFT: Final = "fault_lift"                 # DP 103
+
+# 默認值
+DEFAULT_DRY_MINUTES: Final = 120
+DEFAULT_WASH_INTERVAL_MIN: Final = 15
+DEFAULT_DUST_FREQ_MINUTES: Final = 30

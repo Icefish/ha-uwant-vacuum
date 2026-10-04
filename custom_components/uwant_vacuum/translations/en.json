@@ -135,6 +135,32 @@
       "find_device": {
         "name": "Find device"
       }
+    },
+    "switch": {
+      "do_not_disturb": {
+        "name": "Do not disturb"
+      },
+      "kid_lock": {
+        "name": "Kid lock"
+      },
+      "edge_brush": {
+        "name": "Edge brush"
+      },
+      "carpet_clean": {
+        "name": "Carpet cleaning"
+      },
+      "carpet_boost": {
+        "name": "Carpet boost"
+      },
+      "no_stair_mode": {
+        "name": "No-stair mode"
+      },
+      "auto_dust_collect": {
+        "name": "Auto dust collection"
+      },
+      "key_led_always_on": {
+        "name": "Key LED always on"
+      }
     }
   },
   "services": {

@@ -40,7 +40,7 @@ from .tuya_client import TuyaAuthError, TuyaClient, TuyaError
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS: list[Platform] = [Platform.VACUUM, Platform.SENSOR, Platform.SELECT, Platform.BUTTON]
+PLATFORMS: list[Platform] = [Platform.VACUUM, Platform.SENSOR, Platform.SELECT, Platform.BUTTON, Platform.SWITCH]
 
 # 相容舊版 Python 的別名寫法(不用 `type` 關鍵字,需 Python 3.12+)
 UwantConfigEntry = ConfigEntry
